@@ -7,9 +7,10 @@
                within a hospital or healthcare organization.
     "summary": "This is the System for Management Hospital and assignment patients Information""",
     "data": [
-        # "reports/patient_print.xml",
-        # "security/ir.model.access.csv",
-        # "security/hms_security.xml",
+        "reports/print_patient_template.xml",
+        "reports/print_patient.xml",
+        "security/ir.model.access.csv",
+        "security/security_view.xml",
         "views/base_menus.xml",
         "views/patient_view.xml",
         "views/department_view.xml",

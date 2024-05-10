@@ -13,6 +13,7 @@
                     <field name="age"/>
                     <field name="blood_type"/>
                     <field name="image"/>
+
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
