@@ -14,8 +14,8 @@ class Patient(models.Model):
     email = fields.Char()
     _sql_constraints = [("Duplicated_Email", "UNIQUE(email)", "Email Already Exists")]
     birth_date = fields.Date()
-    age = fields.Integer(compute="compute_age")
-    history = fields.Html(tracking=1)
+    age = fields.Integer(compute="compute_age", tracking=1)
+    history = fields.Html()
     cr_ratio = fields.Float()
     blood_type = fields.Selection(
         [('a+', 'A+'),
@@ -111,7 +111,7 @@ class Patient(models.Model):
     def action_add_history(self):
         action = self.env['ir.actions.actions']._for_xml_id('hms.history_wizard_action')
         action['context'] = {
-            'default_patient_id': self.id,
+            'default_patient_id': self._uid,
             'default_current_date': fields.Datetime.now(),
         }
         return action

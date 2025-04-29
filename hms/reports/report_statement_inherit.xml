@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Inheriting the existing statement report template -->
+        <template id="report_statement_inherit" inherit_id="account.report_statement">
+            <xpath expr="//table[2][@class='table table-borderless m-0']//tr" position="replace">
+                <thead>
+                    <tr class="table-info text-center fs-1">
+                        <th>Date</th>
+                        <th>Label</th>
+                        <th>Partner</th>
+                        <th>Debit</th>
+                        <th>Credit</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr t-foreach="o.line_ids" t-as="line">
+                        <td class="w-25 py-2 text-center">
+                            <span class="d-block fw-bold" t-field="line.date">2023-08-11</span>
+                        </td>
+                        <td class="text-center py-1">
+                            <span class="d-block" t-if="line.payment_ref" t-field="line.payment_ref">Payment Reference
+                            </span>
+                        </td>
+                        <td class="text-center py-1">
+                            <span class="d-block fw-bold" t-if="line.partner_id">
+                                <span t-out="line.partner_id.name">Marc Demo</span>
+                                <span t-if="line.partner_bank_id and line.partner_bank_id.partner_id != line.partner_id">
+                                    (<span t-out="line.partner_bank_id.partner_id.name">Bank of odoo</span>)
+                                </span>
+                            </span>
+                            <span class="d-block" t-if="line.partner_bank_id or line.account_number"
+                                  t-out="line.account_number or line.partner_bank_id.acc_number">534677881234
+                            </span>
+                        </td>
+
+                        <!-- Adding the debit and credit columns -->
+                        <td class="text-center py-1">
+                            <span t-att-class="'d-block fw-bold' + (' text-danger' if line.amount &lt; 0 else '')"
+                                  t-if="line.amount &gt;= 0" t-field="line.amount"/>
+                        </td>
+                        <td class="text-center py-1">
+                            <span t-att-class="'d-block fw-bold' + (' text-danger' if line.amount &lt; 0 else '')"
+                                  t-if="line.amount &lt; 0">
+                                <t t-esc="abs(line.amount)"/>
+                            </span>
+                        </td>
+                    </tr>
+                    <!-- Adding total row -->
+                    <tr class="py-3 mt-3 border-0 border-top border-info">
+                        <td class="py-1 text-center fs-4">
+                            <strong>Total</strong>
+                        </td>
+                        <td class="text-center py-1"></td>
+                        <td class="text-center py-1"></td>
+                        <td class="text-center py-1 fs-4">
+                            <strong>
+                                <t t-set="total_debit"  t-value="sum(line.amount for line in o.line_ids if line.amount &gt; 0)"/>
+                                <span t-esc="total_debit"/>
+                            </strong>
+                        </td>
+                        <td class="text-center py-1 fs-4">
+                            <strong>
+                                <t t-set="total_credit"  t-value="sum(abs(line.amount) for line in o.line_ids if line.amount &lt; 0)"/>
+                                <span t-esc="total_credit"/>
+                            </strong>
+                        </td>
+                    </tr>
+                </tbody>
+            </xpath>
+
+            <xpath expr="//table[2][@class='table table-borderless m-0']" position="after">
+                <table class="table text-center mt-5" cellspacing="0" cellpadding="0" style='border: none;'>
+                    <tr>
+                        <td style='border: none;'>
+                            <strong>Treasurer</strong>
+                        </td>
+                        <td style='border: none;'>
+                            <strong>Auditor</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style='border: none;'>
+                            <strong>......................................................................</strong>
+                        </td>
+                        <td style='border: none;'>
+                            <strong>......................................................................</strong>
+                        </td>
+                    </tr>
+                </table>
+            </xpath>
+        </template>
+    </data>
+</odoo>
